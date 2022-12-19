@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33110.190
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzSignlaR.ResourceCleaner", "AzSignlaR.ResourceCleaner\AzSignlaR.ResourceCleaner.csproj", "{68D35F58-3A9E-4495-97A2-CF4762879E28}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ResourceCleaner", "ResourceCleaner\ResourceCleaner.csproj", "{51B238A7-2B6E-4CC2-90D4-CAFABDADC089}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{68D35F58-3A9E-4495-97A2-CF4762879E28}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{68D35F58-3A9E-4495-97A2-CF4762879E28}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{68D35F58-3A9E-4495-97A2-CF4762879E28}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{68D35F58-3A9E-4495-97A2-CF4762879E28}.Release|Any CPU.Build.0 = Release|Any CPU
+		{51B238A7-2B6E-4CC2-90D4-CAFABDADC089}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51B238A7-2B6E-4CC2-90D4-CAFABDADC089}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51B238A7-2B6E-4CC2-90D4-CAFABDADC089}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51B238A7-2B6E-4CC2-90D4-CAFABDADC089}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {5773F659-ADE9-4545-8E51-B899F16C3DED}
+		SolutionGuid = {48FD52DF-9E3A-499C-997D-701F48D571D2}
 	EndGlobalSection
 EndGlobal
