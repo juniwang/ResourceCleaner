@@ -141,7 +141,8 @@ namespace ResourceCleaner
                         }
                     }
                     // break if ttl already expired
-                    if (createdon.AddHours(options.TTLHours) < DateTimeOffset.Now)
+                    if (createdon != DateTimeOffset.MaxValue
+                        && createdon.AddHours(options.TTLHours) < DateTimeOffset.UtcNow)
                     {
                         break;
                     }
@@ -151,13 +152,14 @@ namespace ResourceCleaner
             // backfill CreatedTime to now.
             if (createdon == DateTimeOffset.MaxValue)
             {
+                createdon = DateTimeOffset.UtcNow;
                 var tags = resourceGroup.Data.Tags ?? new Dictionary<string, string>();
-                tags[CreatedTime] = DateTimeOffset.Now.ToString();
-                Console.WriteLine("createdOn cannot be infered. Backfill to DateTimeOffset.Now.");
+                tags[CreatedTime] = createdon.ToString();
+                Console.WriteLine("createdOn cannot be infered. Backfill to DateTimeOffset.UtcNow.");
                 await resourceGroup.SetTagsAsync(tags);
             }
 
-            return createdon.AddHours(options.TTLHours) > DateTimeOffset.Now;
+            return createdon.AddHours(options.TTLHours) > DateTimeOffset.UtcNow;
         }
 
         private bool IsReserved(string groupName)
