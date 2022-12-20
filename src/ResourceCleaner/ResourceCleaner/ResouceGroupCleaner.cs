@@ -21,6 +21,7 @@ namespace ResourceCleaner
 
             var armClient = new ArmClient(credential, options.SubscriptionId);
             var subscription = await armClient.GetDefaultSubscriptionAsync();
+            Console.WriteLine($"Browse subscription: {subscription.Data.DisplayName}");
             var groups = subscription.GetResourceGroups();
             await foreach (var group in groups)
             {
@@ -48,6 +49,8 @@ namespace ResourceCleaner
                 AuthorityHost = authHost,
             };
             var credential = new ClientCertificateCredential(options.TenantId, options.ClientId, cert, credentialOptions);
+
+            Console.WriteLine($"Get credential with cert thumbprint: {cert.Thumbprint.Substring(0, 8)}{new string('*', cert.Thumbprint.Length - 8)}");
             return credential;
         }
     }
