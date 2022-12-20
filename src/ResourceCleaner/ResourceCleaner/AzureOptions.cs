@@ -10,5 +10,6 @@ namespace ResourceCleaner
         public string ClientId { get; set; }
         public string ClientCertificate { get; set; }
         public int TTLHours { get; set; } = 168; // 7 days
+        public string[] ReservedGroups = new string[0];
     }
 }
