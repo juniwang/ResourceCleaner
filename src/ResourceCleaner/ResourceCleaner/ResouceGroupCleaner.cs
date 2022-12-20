@@ -79,17 +79,17 @@ namespace ResourceCleaner
                 return;
             }
 
-            // check TTL
-            if (await IsWithinTTL(resourceGroup))
-            {
-                LogWithSkipReason(groupName, $"resourceGroup was created within {options.TTLHours} hours.");
-                return;
-            }
-
             // check locks
             if (await IsLocked(resourceGroup))
             {
                 LogWithSkipReason(groupName, "locked from deletion.");
+                return;
+            }
+            
+            // check TTL
+            if (await IsWithinTTL(resourceGroup))
+            {
+                LogWithSkipReason(groupName, $"resourceGroup was created within {options.TTLHours} hours.");
                 return;
             }
 
@@ -155,7 +155,7 @@ namespace ResourceCleaner
                 createdon = DateTimeOffset.UtcNow;
                 var tags = resourceGroup.Data.Tags ?? new Dictionary<string, string>();
                 tags[CreatedTime] = createdon.ToString();
-                Console.WriteLine("createdOn cannot be infered. Backfill to DateTimeOffset.UtcNow.");
+                Console.WriteLine($"{resourceGroup.Data.Name}: Cannot determine the createdTime. Backfill to DateTimeOffset.UtcNow.");
                 await resourceGroup.SetTagsAsync(tags);
             }
 
