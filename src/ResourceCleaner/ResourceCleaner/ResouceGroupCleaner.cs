@@ -18,14 +18,38 @@ namespace ResourceCleaner
         public async Task TriggerCleanUp()
         {
             var credential = GetAzureCredential();
-
-            var armClient = new ArmClient(credential, options.SubscriptionId);
+            var armClient = GetArmClient(credential);
             var subscription = await armClient.GetDefaultSubscriptionAsync();
-            Console.WriteLine($"Browse subscription: {subscription.Data.DisplayName}");
+            Console.WriteLine($"Subscription: {subscription.Data.DisplayName}");
+            Console.WriteLine("ResourceGroups:");
             var groups = subscription.GetResourceGroups();
             await foreach (var group in groups)
             {
+                var ss = group.Data.SystemData;
                 Console.WriteLine(group.Data.Name);
+            }
+        }
+
+        //private async Task
+
+        private ArmClient GetArmClient(TokenCredential credential)
+        {
+            switch (options.CloudInstance)
+            {
+                case AzureCloudInstance.AzurePublic:
+                    return new ArmClient(credential, options.SubscriptionId);
+                case AzureCloudInstance.AzureUsGovernment:
+                    return new ArmClient(credential, options.SubscriptionId, new ArmClientOptions
+                    {
+                        Environment = ArmEnvironment.AzureGovernment
+                    });
+                case AzureCloudInstance.AzureChina:
+                    return new ArmClient(credential, options.SubscriptionId, new ArmClientOptions
+                    {
+                        Environment = ArmEnvironment.AzureChina
+                    });
+                default:
+                    throw new ArgumentOutOfRangeException("unsupported AzureCloudInstance.");
             }
         }
 
