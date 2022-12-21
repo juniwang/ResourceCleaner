@@ -96,7 +96,7 @@ namespace ResourceCleaner
 
             // deleting group
             await DeleteResourceGroup(resourceGroup);
-            Console.WriteLine($"{groupName}: Deleted.");
+            Console.WriteLine($"{groupName}: start deleting.");
         }
 
         private async Task DeleteResourceGroup(ResourceGroupResource resourceGroup)
@@ -112,7 +112,7 @@ namespace ResourceCleaner
             }
 
             // delete group
-            await resourceGroup.DeleteAsync(Azure.WaitUntil.Completed);
+            await resourceGroup.DeleteAsync(Azure.WaitUntil.Started);
         }
 
         private async Task<bool> IsLocked(ResourceGroupResource resourceGroup)
