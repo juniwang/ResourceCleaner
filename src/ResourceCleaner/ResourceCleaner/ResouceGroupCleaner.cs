@@ -1,6 +1,7 @@
 ﻿using Azure.Core;
 using Azure.Identity;
 using Azure.ResourceManager;
+using Azure.ResourceManager.Network;
 using Azure.ResourceManager.Resources;
 using Azure.ResourceManager.Resources.Models;
 using Microsoft.Identity.Client;
@@ -85,7 +86,7 @@ namespace ResourceCleaner
                 LogWithSkipReason(groupName, "locked from deletion.");
                 return;
             }
-            
+
             // check TTL
             if (await IsWithinTTL(resourceGroup))
             {
@@ -94,8 +95,24 @@ namespace ResourceCleaner
             }
 
             // deleting group
-            await resourceGroup.DeleteAsync(Azure.WaitUntil.Completed);
+            await DeleteResourceGroup(resourceGroup);
             Console.WriteLine($"{groupName}: Deleted.");
+        }
+
+        private async Task DeleteResourceGroup(ResourceGroupResource resourceGroup)
+        {
+            // disociate NSG subnets
+            await foreach (var vnet in resourceGroup.GetVirtualNetworks())
+            {
+                await foreach (var subnet in vnet.GetSubnets())
+                {
+                    subnet.Data.NetworkSecurityGroup = null;
+                    await subnet.UpdateAsync(Azure.WaitUntil.Completed, subnet.Data);
+                }
+            }
+
+            // delete group
+            await resourceGroup.DeleteAsync(Azure.WaitUntil.Completed);
         }
 
         private async Task<bool> IsLocked(ResourceGroupResource resourceGroup)
