@@ -170,11 +170,19 @@ namespace ResourceCleaner
             // backfill CreatedTime to now.
             if (createdon == DateTimeOffset.MaxValue)
             {
-                createdon = DateTimeOffset.UtcNow;
-                var tags = resourceGroup.Data.Tags ?? new Dictionary<string, string>();
-                tags[CreatedTime] = createdon.ToString();
-                Console.WriteLine($"{resourceGroup.Data.Name}: Cannot determine the createdTime. Backfill to DateTimeOffset.UtcNow.");
-                await resourceGroup.SetTagsAsync(tags);
+                try
+                {
+                    createdon = DateTimeOffset.UtcNow;
+                    var tags = resourceGroup.Data.Tags ?? new Dictionary<string, string>();
+                    tags[CreatedTime] = createdon.ToString();
+                    Console.WriteLine($"{resourceGroup.Data.Name}: Cannot determine the createdTime. Backfill to DateTimeOffset.UtcNow.");
+                    await resourceGroup.SetTagsAsync(tags);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine($"{resourceGroup.Data.Name}: failed to tag resourceGroup: {e.Message}");
+                    Console.WriteLine(e.ToString());
+                }
             }
 
             return createdon.AddHours(options.TTLHours) > DateTimeOffset.UtcNow;
