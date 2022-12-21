@@ -94,6 +94,7 @@ namespace ResourceCleaner
             }
 
             // deleting group
+            await resourceGroup.DeleteAsync(Azure.WaitUntil.Completed);
             Console.WriteLine($"{groupName}: Deleted.");
         }
 
