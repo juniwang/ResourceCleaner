@@ -12,6 +12,8 @@ namespace ResourceCleaner
     internal class ResouceGroupCleaner
     {
         const string CreatedTime = "CreatedTime";
+        const string SkipTTL = "skipttl";
+
         static readonly string[] DefaultReservedGroups = new string[]
         {
             // well-known
@@ -73,6 +75,13 @@ namespace ResourceCleaner
         private async Task CheckAndCleanup(ResourceGroupResource resourceGroup)
         {
             var groupName = resourceGroup.Data.Name;
+            // tagged for skip
+            if (IsTaggedForSkip(resourceGroup))
+            {
+                LogWithSkipReason(groupName, "tagged with SkipTTL.");
+                return;
+            }
+
             // reserved groups
             if (IsReserved(groupName))
             {
@@ -124,6 +133,23 @@ namespace ResourceCleaner
                 {
                     return true;
                 }
+            }
+
+            return false;
+        }
+
+        private bool IsTaggedForSkip(ResourceGroupResource resourceGroup)
+        {
+            if (resourceGroup.Data.Tags == null)
+                return false;
+
+            var tags = new Dictionary<string, string>(resourceGroup.Data.Tags, StringComparer.InvariantCultureIgnoreCase);
+            if (tags != null
+                && tags.TryGetValue(SkipTTL, out string skipTTL)
+                && bool.TryParse(skipTTL, out bool isSkipped)
+                && isSkipped)
+            {
+                return true;
             }
 
             return false;
